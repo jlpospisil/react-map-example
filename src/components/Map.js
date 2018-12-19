@@ -1,36 +1,37 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types';
-import {GoogleApiWrapper, Map as GoogleMaps, Polygon, HeatMap} from 'google-maps-react';
+import {GoogleApiWrapper, Map as GoogleMaps, Polygon, HeatMap, Marker} from 'google-maps-react';
 
 const LoadingContainer = () => <div>Fancy loading container</div>;
 
 class MapContainer extends Component {
   render() {
-    const {props} = this;
-    const {google, include} = props;
+    const {google, include, polygons, heatMaps, markers} = this.props;
 
     // Create a 1 dimensional array of the included elements to be added to the map
     const elements = include.map((items) => {
-      let Element, prop, pointsAttr;
-
       switch (items.toLowerCase()) {
         case 'polygons':
-          [Element, prop, pointsAttr] = [Polygon, 'polygons', 'paths'];
-          break;
+          return polygons.map((polygon, index) => {
+            const {key=`polygon-${index}`, points=[], options={}} = polygon;
+            return <Polygon key={key} paths={points} {...options} />
+          });
+
         case 'heatmaps':
-          [Element, prop, pointsAttr] = [HeatMap, 'heatMaps', 'positions'];
-          break;
+          return heatMaps.map((heatMap, index) => {
+            const {key=`heatMap-${index}`, points=[], options={}} = heatMap;
+            return <HeatMap key={key} positions={points} {...options} />
+          });
+
+        case 'markers':
+          return markers.map((marker, index) => {
+            const {key=`marker-${index}`, position={}, options={}} = marker;
+            return <Marker key={key} position={position} {...options} />
+          });
+
         default:
+          return [];
       }
-
-      if (Element && prop && Array.isArray(props[prop]) && props[prop].length > 0) {
-        return props[prop].map((item, index) => {
-          const {key=`${prop}-${index}`, points=[], options={}} = item;
-          return <Element key={key} {...{[pointsAttr]: points, ...options}} />
-        })
-      }
-
-      return []
     }).flat();
 
     return (
@@ -51,12 +52,14 @@ MapContainer.propTypes = {
   include: PropTypes.array,
   polygons: PropTypes.array,
   heatMaps: PropTypes.array,
+  markers: PropTypes.array,
 };
 
 MapContainer.defaultProps = {
-  include: ['polygons', 'heatMaps'],
+  include: ['polygons', 'heatMaps', 'markers'],
   polygons: [],
   heatMaps: [],
+  markers: [],
 };
 
 export default GoogleApiWrapper({
