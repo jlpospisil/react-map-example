@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, NavLink, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, NavLink, Redirect, Switch } from "react-router-dom";
 import '../scss/app.scss';
-import MapContainer from './MapContainer';
+import Map from './Map';
+import MapWithPolygon from './MapWithPolygon';
+import MapWithHeatMap from './MapWithHeatMap';
 
 class App extends Component {
   render() {
@@ -15,10 +17,12 @@ class App extends Component {
           </nav>
 
           <div className="AppContent">
-            <Route path="/basic" exact={true} component={MapContainer} />
-            <Route path="/polygon" exact={true} component={MapContainer} />
-            <Route path="/heat-map" exact={true} component={MapContainer} />
-            <Redirect to="/basic" />
+            <Switch>
+              <Route exact path="/basic" component={Map} />
+              <Route exact path="/polygon" component={MapWithPolygon} />
+              <Route exact path="/heat-map" component={MapWithHeatMap} />
+              <Redirect to="/basic" />
+            </Switch>
           </div>
         </div>
       </Router>
