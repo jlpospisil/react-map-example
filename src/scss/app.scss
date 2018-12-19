@@ -1,3 +1,5 @@
+@import "./_variables.scss";
+
 body {
   margin: 0;
   padding: 0;
@@ -11,4 +13,40 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.App {
+  .AppNav {
+    position: fixed;
+    height: $top-nav-height;
+    width: 100vw;
+    background-color: $top-nav-bg;
+    z-index: 1030;
+    box-shadow: 0 0 8px $top-nav-text;
+    border-top: 5px solid darken($top-nav-text, 5%);
+
+    a {
+      font-weight: bold;
+      color: $top-nav-text;
+      text-decoration: none;
+      height: $top-nav-height - 5px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 1rem;
+
+      &:hover, &:focus {
+        color: darken($top-nav-text, 15%);
+      }
+
+      &.active {
+        color: $top-nav-active-text;
+        border-bottom: 5px solid darken($top-nav-active-text, 10%);
+      }
+    }
+  }
+
+  .AppContent {
+    padding-top: $top-nav-height;
+    color: $top-nav-text;
+  }
 }
