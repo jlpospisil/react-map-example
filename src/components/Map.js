@@ -11,7 +11,7 @@ export default class Map extends Component {
           lat: 38,
           lng: -99,
         }}
-        zoom={5}
+        zoom={4}
       >
         { children }
       </GoogleMaps>
