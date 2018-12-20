@@ -6,6 +6,7 @@ import Map from './Map';
 import MapWithPolygon from './MapWithPolygon';
 import MapWithHeatMap from './MapWithHeatMap';
 import MapWithClickableMarker from './MapWithClickableMarker';
+import StatePopulationsMap from './StatePopulationsMap';
 
 const LoadingContainer = () => <div>Fancy loading container</div>;
 
@@ -27,6 +28,7 @@ class App extends Component {
             <NavLink to="/polygon">Polygon</NavLink>
             <NavLink to="/heat-map">HeatMap</NavLink>
             <NavLink to="/clickable-marker">Clickable Marker</NavLink>
+            <NavLink to="/state-populations">State Populations</NavLink>
           </nav>
 
           <div className="AppContent">
@@ -35,6 +37,7 @@ class App extends Component {
               <Route exact path="/polygon" component={initializeMap(MapWithPolygon)} />
               <Route exact path="/heat-map" component={initializeMap(MapWithHeatMap)} />
               <Route exact path="/clickable-marker" component={initializeMap(MapWithClickableMarker)} />
+              <Route exact path="/state-populations" component={initializeMap(StatePopulationsMap)} />
               <Redirect to="/basic" />
             </Switch>
           </div>
