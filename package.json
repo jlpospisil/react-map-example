@@ -12,7 +12,8 @@
     "react-scripts": "2.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npx concurrently --kill-others \"npm run start:api\" \"npm run start:app\"",
+    "start:app": "react-scripts start",
     "start:api": "npx json-server --watch api/index.js --routes api/routes.json --port 4000",
     "build": "react-scripts build",
     "test": "react-scripts test",
