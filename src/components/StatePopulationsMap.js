@@ -62,8 +62,8 @@ export default class StatePopulationsMap extends Component {
 
   calculateColor(pct) {
     const percentColors = [
-      { pct: 0.0, color: { r: 0x5c, g: 0x6b, b: 0xc0 } },  // #5C6BC0
-      { pct: 0.5, color: { r: 0xfb, g: 0x8c, b: 0 } },     // #FB8C00
+      { pct: 0.0, color: { r: 0xff, g: 0xf5, b: 0x9d } },  // #FFF59D
+      { pct: 0.3, color: { r: 0xfb, g: 0x8c, b: 0 } },     // #FB8C00
       { pct: 1.0, color: { r: 0xc6, g: 0x28, b: 0x28 } }   // #c62828
     ];
 
