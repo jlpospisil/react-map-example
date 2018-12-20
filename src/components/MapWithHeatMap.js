@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {HeatMap} from 'google-maps-react';
 import Map from './Map';
 
 const gradient = [
@@ -18,7 +19,7 @@ const gradient = [
   'rgba(255, 0, 0, 1)'
 ];
 
-const points = [
+const positions = [
   { lat: 41.252551, lng: -95.945368 },
   { lat: 41.252745, lng: -95.944586 },
   { lat: 41.252842, lng: -95.943688 },
@@ -39,15 +40,12 @@ const points = [
 
 export default class MapWithHeatMap extends Component {
   render() {
-    return <Map heatMaps={[
-      {
-        points,
-        options: {
-          gradient,
-          radius: 20,
-          opacity: 0.3,
-        },
-      }
-    ]} />;
+    const {google} = this.props;
+
+    return (
+      <Map google={google}>
+        <HeatMap positions={positions} gradient={gradient} radius={20} opacity={0.3} />
+      </Map>
+    )
   }
 }

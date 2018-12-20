@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {Polygon} from 'google-maps-react';
 import Map from './Map';
 
 const polygonProps = {
@@ -9,7 +10,7 @@ const polygonProps = {
   fillOpacity: 0.2,
 };
 
-const polygons = [
+const paths = [
   [
     {lat: 42.9986, lng: -104.054},
     {lat: 41.0027, lng: -104.054},
@@ -59,12 +60,12 @@ const polygons = [
 
 export default class MapWithPolygon extends Component {
   render() {
-    return <Map polygons={[
-      {
-        key: 'polygon-NE',
-        points: polygons,
-        options: polygonProps,
-      }
-    ]} />;
+    const {google} = this.props;
+
+    return (
+      <Map google={google}>
+        <Polygon paths={paths} {...polygonProps} />
+      </Map>
+    )
   }
 }
