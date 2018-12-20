@@ -1,0 +1,4 @@
+{
+  "/polygons/states": "/statePolygons",
+  "/polygons/states/:id": "/statePolygons/:id"
+}
