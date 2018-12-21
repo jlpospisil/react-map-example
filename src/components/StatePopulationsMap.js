@@ -130,43 +130,37 @@ export default class StatePopulationsMap extends Component {
 
     return (
       <Map google={google}>
-        {
-          polygons.map((polygon) => {
-            const {id, points} = polygon;
-            const populationData = populations[id];
-            const {Population: population} = populationData || {};
-            const percentage = population ? (population - minPopulation) / (maxPopulation - minPopulation) : 0;
-            const color = calculateColor(percentage);
-            const options = {
-              ...polygonProps,
-              strokeColor: color,
-              fillColor: color,
-              stateAbbreviation: id,
-              populationData,
-            };
-            return <Polygon key={`polygon-${id}`} paths={points} {...options} onClick={updateAndDisplayInfoWindow} />
-          })
-        }
+        { polygons.map((polygon) => {
+          const {id, points} = polygon;
+          const populationData = populations[id];
+          const {Population: population} = populationData || {};
+          const percentage = population ? (population - minPopulation) / (maxPopulation - minPopulation) : 0;
+          const color = calculateColor(percentage);
+          const options = {
+            ...polygonProps,
+            strokeColor: color,
+            fillColor: color,
+            stateAbbreviation: id,
+            populationData,
+          };
+          return <Polygon key={`polygon-${id}`} paths={points} {...options} onClick={updateAndDisplayInfoWindow} />
+        }) }
 
-        <InfoWindow
-          position={infoWindowPosition}
-          visible={showInfoWindow}
-        >
-          <div>
-            <h3>{ activePolygon ? activePolygon.stateAbbreviation : '' }</h3>
-            {
-              activePolygon && activePolygon.populationData && ['Population', 'Rank'].map((item) => (
-              <div key={item}>
-                <strong>{ item }</strong>
-                &nbsp;
-                { activePolygon.populationData[item] }
-              </div>
-              ))
-            }
-            {
-              (!activePolygon || !activePolygon.populationData) && <div>No census data available</div>
-            }
-          </div>
+        <InfoWindow position={infoWindowPosition} visible={showInfoWindow}>
+          <h3>
+            { activePolygon ? activePolygon.stateAbbreviation : '' }
+            { activePolygon && activePolygon.populationData ? ` - ${activePolygon.populationData.State}` : '' }
+          </h3>
+
+          { /* Print the desired details from the census data if it is available */ }
+          { activePolygon && activePolygon.populationData && ['Population', 'Rank'].map((item) => (
+            <div key={item}>
+              <strong>{ item }</strong> { activePolygon.populationData[item] }
+            </div>
+          )) }
+
+          { /* If it isn't available, print unavailable message */ }
+          { (!activePolygon || !activePolygon.populationData) && <div>No census data available</div> }
         </InfoWindow>
       </Map>
     )
