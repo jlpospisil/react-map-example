@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "dea783b6-81f0-41fe-97a4-1fef1f3c9d98",
+		"name": "Google Maps React",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/census-data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/census-data",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"census-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/census-data/{{state_abbr}}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/census-data/{{state_abbr}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"census-data",
+						"{{state_abbr}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/polygons/states",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/polygons/states",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"polygons",
+						"states"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/polygons/states/{{state_abbr}}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/polygons/states/{{state_abbr}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"polygons",
+						"states",
+						"{{state_abbr}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
