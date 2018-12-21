@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Polygon} from 'google-maps-react';
+import {Polygon, InfoWindow} from 'google-maps-react';
 import axios from 'axios';
 import Map from './Map';
 
@@ -18,21 +18,25 @@ export default class StatePopulationsMap extends Component {
       populations: {},
       minPopulation: -1,
       maxPopulation: 0,
+      activePolygon: null,
+      showInfoWindow: false,
+      infoWindowPosition: null
     };
 
     this.getStateCensusData = this.getStateCensusData.bind(this);
     this.getStatePolygons = this.getStatePolygons.bind(this);
     this.calculateColor = this.calculateColor.bind(this);
+    this.updateAndDisplayInfoWindow = this.updateAndDisplayInfoWindow.bind(this);
   }
 
   getStateCensusData() {
     axios.get('/census-data').then((response) => {
       if (response.data && Array.isArray(response.data)) {
         const populations = response.data.reduce((obj, state) => {
-          const {id, Population} = state;
+          const {id} = state;
           return {
             ...obj,
-            [id]: Population,
+            [id]: state,
           };
         }, {});
 
@@ -59,6 +63,30 @@ export default class StatePopulationsMap extends Component {
     });
   }
 
+  updateAndDisplayInfoWindow(polygon) {
+    const {paths} = polygon || {};
+
+    if (Array.isArray(paths) && paths.length > 0) {
+      let {lng: x1, lng: x2, lat: y1, lat: y2} = paths[0];
+
+      for (let i=0; i < paths.length; i++) {
+        const {lat, lng} = paths[i];
+        x1 = Math.min(x1, lng);
+        x2 = Math.max(x2, lng);
+        y1 = Math.min(y1, lat);
+        y2 = Math.max(y2, lat);
+      }
+
+      this.setState({
+        activePolygon: polygon,
+        showInfoWindow: true,
+        infoWindowPosition: {
+          lat: y1 + ((y2 - y1) / 2),
+          lng: x1 + ((x2 - x1) / 2),
+        },
+      })
+    }
+  }
 
   calculateColor(pct) {
     const percentColors = [
@@ -97,25 +125,49 @@ export default class StatePopulationsMap extends Component {
 
   render() {
     const {google} = this.props;
-    const {polygons, populations, minPopulation, maxPopulation} = this.state;
-    const {calculateColor} = this;
+    const {polygons, populations, minPopulation, maxPopulation, showInfoWindow, infoWindowPosition, activePolygon} = this.state;
+    const {calculateColor, updateAndDisplayInfoWindow} = this;
 
     return (
       <Map google={google}>
         {
           polygons.map((polygon) => {
             const {id, points} = polygon;
-            const population = populations[id];
+            const populationData = populations[id];
+            const {Population: population} = populationData || {};
             const percentage = population ? (population - minPopulation) / (maxPopulation - minPopulation) : 0;
             const color = calculateColor(percentage);
             const options = {
               ...polygonProps,
               strokeColor: color,
               fillColor: color,
+              stateAbbreviation: id,
+              populationData,
             };
-            return <Polygon key={`polygon-${id}`} paths={points} {...options} />
+            return <Polygon key={`polygon-${id}`} paths={points} {...options} onClick={updateAndDisplayInfoWindow} />
           })
         }
+
+        <InfoWindow
+          position={infoWindowPosition}
+          visible={showInfoWindow}
+        >
+          <div>
+            <h3>{ activePolygon ? activePolygon.stateAbbreviation : '' }</h3>
+            {
+              activePolygon && activePolygon.populationData && ['Population', 'Rank'].map((item) => (
+              <div key={item}>
+                <strong>{ item }</strong>
+                &nbsp;
+                { activePolygon.populationData[item] }
+              </div>
+              ))
+            }
+            {
+              (!activePolygon || !activePolygon.populationData) && <div>No census data available</div>
+            }
+          </div>
+        </InfoWindow>
       </Map>
     )
   }
